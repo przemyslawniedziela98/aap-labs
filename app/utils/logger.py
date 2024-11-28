@@ -6,7 +6,6 @@ class GlobalLogger:
     """
     Global logger class that logs events to the database.
     """
-
     @staticmethod
     def log_event(event_type: str, message: str) -> None:
         """
@@ -42,3 +41,13 @@ class GlobalLogger:
             message (str): The details of the error.
         """
         GlobalLogger.log_event("ERROR", message)
+
+    @staticmethod
+    def log_warning(message: str) -> None:
+        """
+        Logs an warning event.
+
+        Args:
+            message (str): The details of the event.
+        """
+        GlobalLogger.log_event("WARNING", message)

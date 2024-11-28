@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from ..models.user import User, db
 from ..forms import LoginForm, RegistrationForm
 from ..utils.logger import GlobalLogger
+from flask_login import login_required, current_user, login_user
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -31,7 +32,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.check_password(form.password.data):
-            flash('Login successful!', 'success')
+            login_user(user)
             GlobalLogger.log_info(f"User {form.username.data} logged in successfully.")
             return redirect(url_for('auth.dashboard'))
         else:
@@ -64,3 +65,14 @@ def register():
             flash('An error occurred during registration. Please try again.', 'danger')
             GlobalLogger.log_error(f"Error registering user {form.username.data}: {e}")
     return render_template('register.html', form=form)
+
+@auth_bp.route('/dashboard', methods=['GET'])
+@login_required
+def dashboard():
+    """
+    Displays the dashboard.
+
+    Returns:
+        str: The rendered dashboardhome.html template.
+    """
+    return render_template('dashboard.html', user=current_user)

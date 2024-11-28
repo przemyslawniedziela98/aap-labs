@@ -1,9 +1,10 @@
 from .. import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from ..utils.logger import GlobalLogger
+from flask_login import UserMixin
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     """
     Represents a user in the application.
     """

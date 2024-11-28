@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 mb-4">
+            <a href="#" class="btn btn-lg btn-block btn-success d-flex align-items-center justify-content-center" style="font-size: 21px; padding: 20px; text-align: center; color: black">
+
+                <img src="{{ url_for('static', filename='deep_learning.png') }}" alt="Image" style="max-width: 40px; margin-right: 10px;"/>
+                Zaawansowane metody sztucznej inteligencji
+            </a>
+        </div>
+        <div class="col-md-5 mb-4">
+            <a href="#" class="btn btn-lg btn-block btn-success d-flex align-items-center justify-content-center" style="font-size: 21px; padding: 20px; text-align: center; color: black">
+                <img src="{{ url_for('static', filename='aap.png') }}" alt="Image" style="max-width: 40px; margin-right: 10px;"/>
+                Architektura aplikacji w Pythonie
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
