@@ -65,3 +65,57 @@ body {
 .login-btn:hover {
     background-color: #365B4E;
 }
+
+.custom-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-table th {
+    background-color: #52796F;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 15px;
+}
+
+.custom-table td {
+    padding: 15px;
+    color: #2F4E3E;
+}
+
+.custom-table tr:nth-child(odd) {
+    background-color: #F8F9FA;
+}
+
+.custom-table tr:nth-child(even) {
+    background-color: #E9F5EF;
+}
+
+.custom-table tr:hover {
+    background-color: #D4E6DB;
+}
+
+.nav-tabs .nav-link {
+    color: #52796F;
+    font-size: 18px;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #52796F;
+    color: #FFFFFF;
+}
+
+.tab-content {
+    padding: 0px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+
+.tab-pane {
+    padding: 20px;
+}

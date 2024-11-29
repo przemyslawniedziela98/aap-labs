@@ -1,3 +1,4 @@
+import os 
 from flask import Blueprint, render_template, redirect, url_for, flash
 from ..models.user import User, db
 from ..forms import LoginForm, RegistrationForm
@@ -73,6 +74,18 @@ def dashboard():
     Displays the dashboard.
 
     Returns:
-        str: The rendered dashboardhome.html template.
+        str: The rendered dashboard.html template.
     """
     return render_template('dashboard.html', user=current_user)
+
+@auth_bp.route('/zmsi', methods=['GET'])
+@login_required
+def zmsi():
+    """
+    Route to render the zmsi page.
+    """
+    folder_path = os.path.join(os.getcwd(), 'app', 'static', 'class_files', 'zmsi')
+    files = sorted([
+        f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f)) and not '.DS_Store' in f
+    ])
+    return render_template('zmsi.html', files=files)
