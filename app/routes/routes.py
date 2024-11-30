@@ -1,8 +1,10 @@
 import os 
+from typing import Tuple, List
 from flask import Blueprint, render_template, redirect, url_for, flash
 from ..models.user import User, db
 from ..forms import LoginForm, RegistrationForm
 from ..utils.logger import GlobalLogger
+from ..utils import const
 from flask_login import login_required, current_user, login_user, logout_user
 
 auth_bp = Blueprint('auth', __name__)
@@ -78,26 +80,60 @@ def dashboard():
     """
     return render_template('dashboard.html', user=current_user)
 
+def generate_subject_page(directory: str) -> Tuple[List[str], List[str]]:
+    """
+    Generate file paths for subject pages by listing files from specific directories.
+
+    Args:
+        directory (str): The base directory path containing the subdirectories.
+
+    Returns:
+        Tuple[List[str], List[str]]: A tuple containing two lists:
+    """
+    base_static_path = os.path.join(os.getcwd(), 'app', 'static', 'class_files')
+    course_materials_path = os.path.join(base_static_path, directory)
+    additional_materials_path = os.path.join(base_static_path, directory + '_additional')
+
+    def _list_files(directory_path: str) -> List[str]:
+        return sorted([
+            f for f in os.listdir(directory_path)
+            if os.path.isfile(os.path.join(directory_path, f)) and not f.startswith('.')
+        ])
+
+    return _list_files(course_materials_path), _list_files(additional_materials_path)
+
 @auth_bp.route('/zmsi', methods=['GET'])
 @login_required
 def zmsi():
     """
     Route to render the ZMSI page.
     """
-    base_static_path = os.path.join(os.getcwd(), 'app', 'static', 'class_files')
-    course_materials_path = os.path.join(base_static_path, 'zmsi')
-    additional_materials_path = os.path.join(base_static_path, 'zmsi_additional')
-
-    def list_files(directory_path):
-        return sorted([
-            f for f in os.listdir(directory_path)
-            if os.path.isfile(os.path.join(directory_path, f)) and not f.startswith('.')
-        ])
+    files, files_additional = generate_subject_page('zmsi')
 
     return render_template(
-        'zmsi.html',
-        files=list_files(course_materials_path),
-        files_additional=list_files(additional_materials_path)
+        'subject_page.html',
+        prefix = 'zmsi',
+        title = const.SUBJECT_CONTENT['zmsi']['title'],
+        description = const.SUBJECT_CONTENT['zmsi']['description'],
+        files=files,
+        files_additional=files_additional
+    )
+
+@auth_bp.route('/app', methods=['GET'])
+@login_required
+def app():
+    """
+    Route to render the APP page.
+    """
+    files, files_additional = generate_subject_page('app')
+   
+    return render_template(
+        'subject_page.html',
+        prefix = 'app',
+        title = const.SUBJECT_CONTENT['app']['title'],
+        description = const.SUBJECT_CONTENT['app']['description'],
+        files=files,
+        files_additional=files_additional
     )
 
 @auth_bp.route('/logout')
