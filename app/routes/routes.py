@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from ..models.user import User, db
 from ..forms import LoginForm, RegistrationForm
 from ..utils.logger import GlobalLogger
-from flask_login import login_required, current_user, login_user
+from flask_login import login_required, current_user, login_user, logout_user
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -82,10 +82,30 @@ def dashboard():
 @login_required
 def zmsi():
     """
-    Route to render the zmsi page.
+    Route to render the ZMSI page.
     """
-    folder_path = os.path.join(os.getcwd(), 'app', 'static', 'class_files', 'zmsi')
-    files = sorted([
-        f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f)) and not '.DS_Store' in f
-    ])
-    return render_template('zmsi.html', files=files)
+    base_static_path = os.path.join(os.getcwd(), 'app', 'static', 'class_files')
+    course_materials_path = os.path.join(base_static_path, 'zmsi')
+    additional_materials_path = os.path.join(base_static_path, 'zmsi_additional')
+
+    def list_files(directory_path):
+        return sorted([
+            f for f in os.listdir(directory_path)
+            if os.path.isfile(os.path.join(directory_path, f)) and not f.startswith('.')
+        ])
+
+    return render_template(
+        'zmsi.html',
+        files=list_files(course_materials_path),
+        files_additional=list_files(additional_materials_path)
+    )
+
+@auth_bp.route('/logout')
+@login_required
+def logout():
+    """
+    Logs the user out and redirects them to the login page.
+    """
+    logout_user()
+    flash("You have been logged out.", "info")
+    return redirect(url_for('auth.login'))
