@@ -2,6 +2,8 @@ import unittest
 from app import create_app, db
 from flask_testing import TestCase
 from app.models.user import User
+from flask import url_for
+
 
 class TestBase(TestCase):
     """
@@ -66,3 +68,18 @@ class TestViews(TestBase):
         response = self.client.get('/app')
         self.assertEqual(response.status_code, 200)
 
+    def test_dashboard_requires_login(client):
+        """
+        Test to ensure accessing the dashboard redirects to login if the user is not authenticated.
+        """
+        response = client.get(url_for('auth.dashboard'))
+        assert response.status_code == 302
+        assert "/login" in response.location
+
+
+    def test_successful_login(client):
+        """
+        Test to ensure successful login redirects to the dashboard.
+        """
+        response = client.post('/login', data={'username': 'testuser', 'password': 'password'}, follow_redirects=True)
+        assert response.status_code == 200
